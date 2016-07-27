@@ -1,0 +1,43 @@
+package com.tour.dao;
+
+import java.sql.*;
+
+//예약 DB처리
+public class BookDao {
+	//--------------------------------------------------------------------------------------------------------
+	//						전역변수
+	//--------------------------------------------------------------------------------------------------------
+	Connection connection = null;
+	PreparedStatement preparedStatement = null;
+	ResultSet resultSet = null;
+	
+	//--------------------------------------------------------------------------------------------------------
+	//						생성자 메서드
+	//--------------------------------------------------------------------------------------------------------
+	public BookDao(){
+		try {
+			driverDb();
+		} catch (ClassNotFoundException e) {
+			System.out.println("BookDao.java -> 드라이버연결 실패");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("BookDao.java -> 드라이버연결 실패");
+			e.printStackTrace();
+		}
+	}
+	
+	//--------------------------------------------------------------------------------------------------------
+	//						DB 연결 메서드
+	//--------------------------------------------------------------------------------------------------------
+	public void driverDb() throws ClassNotFoundException, SQLException{
+		String driver = "com.mysql.jdbc.Driver";
+		String url = "jdbc:mysql://localhost:3306/tour?useUnicode=true&characterEncoding=utf-8";
+		String dbUser = "root";
+		String dbPass = "java0000";
+		
+		Class.forName(driver);
+		connection = DriverManager.getConnection(url, dbUser, dbPass);
+	}
+	
+	
+}
