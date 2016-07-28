@@ -2,6 +2,8 @@ package com.tour.dao;
 
 import java.sql.*;
 
+import com.tour.dto.Goods;
+
 //예약 DB처리
 public class BookDao {
 	//--------------------------------------------------------------------------------------------------------
@@ -38,6 +40,25 @@ public class BookDao {
 		Class.forName(driver);
 		connection = DriverManager.getConnection(url, dbUser, dbPass);
 	}
-	
+	//--------------------------------------------------------------------------------------------------------
+	//						상품 정보 출력 메서드 
+	//--------------------------------------------------------------------------------------------------------
+	public Goods goodsInfo() throws SQLException{
+		Goods goods = new Goods();
+		String sql = "SELECT * FROM goods";
+		preparedStatement = connection.prepareStatement(sql);
+		
+		resultSet = preparedStatement.executeQuery();
+		
+		while(resultSet.next()){
+			goods.setGoods_name(resultSet.getString("goods_name"));
+			goods.setGoods_ns1(resultSet.getInt("goods_ns1"));
+			goods.setGoods_ns2(resultSet.getInt("goods_ns2"));
+			goods.setGoods_ys1(resultSet.getInt("goods_ys1"));
+			goods.setGoods_ys2(resultSet.getInt("goods_ys2"));
+		}
+		return goods;
+		
+	}
 	
 }

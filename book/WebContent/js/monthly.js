@@ -18,7 +18,7 @@ Monthly 2.0.3 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 				stylePast: false,
 				disablePast: false
 			}
-
+			
 			var options = $.extend(defaults, options),
 				that = this,
 				uniqueId = $(this).attr('id'),
