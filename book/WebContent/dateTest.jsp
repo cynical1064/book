@@ -17,5 +17,13 @@
 	System.out.println(chkOut);
 	System.out.println(roomName);
 %>
+<div>
+	상품명<input type="text" value=""/>
+	상품가격<input type="text" value=""/> 
+	비수기 평일<input type="text" value=""/> 
+	비수기 주말<input type="text" value=""/> 
+	성수기 평일<input type="text" value=""/> 
+	성수기 주말<input type="text" value=""/>  
+</div>
 </body>
 </html>
