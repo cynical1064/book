@@ -12,9 +12,9 @@ public class XmlTest {
 
   public static void main(String[] args) {
 
-    try {
-
-	File fXmlFile = new File("/event/eventRoom.xml");
+    try {    
+    
+	File fXmlFile = new File("./WebContent/events.xml");
 	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	Document doc = dBuilder.parse(fXmlFile);
