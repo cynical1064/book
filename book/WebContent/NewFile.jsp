@@ -39,8 +39,12 @@ $(document).ready(function(){
 	$('.monthly-day').click(function(){
 		
 		var thisDay = $(this).text();
-		//alert(thisDay);
-		$('#chkInTarget').val(thisDay+"/"+currentMonth+"/"+currentYear);
+		
+		if(thisDay != ''){
+			
+			$('#chkInTarget').val(thisDay+"/"+currentMonth+"/"+currentYear);
+		
+		}
 		
 	});
 	
@@ -67,12 +71,32 @@ $(document).ready(function(){
 		
 	});
 	
+	$('#processBook').click(function(){
+		if(){}
+		$('form').submit();
+		
+	})
+	
 });
 </script>
 <style>
+li{list-style:none;}
 a{text-decoration:none; color:#434343;}
 body{color:#434343;}
 #sat{color:#0000ff;}
+#sun{color:#ff0000;}
+.monthly-day{width: calc(100% / 7);
+			box-sizing:border-box;
+			position: relative;
+			font-weight: bold;
+			color:inherit;
+			background: #fff;
+			box-shadow: 0 0 0 1px #EBEBEB;
+			transition:.25s;
+			padding:0;
+			text-decoration: none;}
+#calWrap{float:right;}
+#chkWrap{float:right;}
 </style>
 <%
 request.setCharacterEncoding("UTF-8");
@@ -224,8 +248,8 @@ date_month_next = cal.get(Calendar.MONTH);
 
 
 
-
-<div id="calWrap" style="float:left; width:600px; padding-top:18px; box-shadow: 0 0 0 1px #EBEBEB;" class="calender_box">
+<div id="bookWrap" style="display:inline-block; padding-top:58px;">
+<div id="calWrap" style="float:left; width:600px; padding-top:18px; box-shadow: 0 13px 40px;" class="calender_box">
 			
 			<div  class="calender_date">
 				<h2>
@@ -301,7 +325,7 @@ date_month_next = cal.get(Calendar.MONTH);
 										// 일(SUN)
 										if(i == 0)
 										{
-												td_str += "<a href='#' class='monthly-day monthly-day-event'>";
+												td_str += "<a href='#' id='sun' class='monthly-day monthly-day-event'>";
 												td_str += "<div class='monthly-day-number'>" + day_str + "</div>";
 												//td_str += "<em class='sun'>" + day_str + "</em>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
@@ -335,8 +359,10 @@ date_month_next = cal.get(Calendar.MONTH);
 										
 				
 </div>
+</div>
 <!-- 체크인 체크아웃 셀렉트 -->
 <div id="chkWrap" style="float:left; display:inline-block;">
+	<form action="./dateTest.jsp" method="post">
 	<ul class="clearFix">
 		<li>
 				<h2>체크인</h2>
@@ -352,5 +378,11 @@ date_month_next = cal.get(Calendar.MONTH);
 					<div class="monthly" id="chkOut"></div>
 				</div>
 		</li>
+	 </form>	
+		<li>
+			<h2 id="processBook">예약하기</h2>
+		</li>
 	</ul>
+	
+</div>
 </div>
