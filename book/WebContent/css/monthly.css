@@ -168,7 +168,7 @@
 	background: #fff!important;
 }
 /* Current day style */
-.monthly-today .monthly-day-number {
+.currentDay {
 	color: #FFF;
 	background: #EA6565;
 	border-radius: 20px;
