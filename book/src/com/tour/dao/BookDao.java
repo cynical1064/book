@@ -2,6 +2,7 @@ package com.tour.dao;
 
 import java.sql.*;
 
+import com.tour.dto.Book;
 import com.tour.dto.Goods;
 
 //예약 DB처리
@@ -56,9 +57,27 @@ public class BookDao {
 			goods.setGoods_ns2(resultSet.getInt("goods_ns2"));
 			goods.setGoods_ys1(resultSet.getInt("goods_ys1"));
 			goods.setGoods_ys2(resultSet.getInt("goods_ys2"));
+			goods.setGoods_ys2(resultSet.getInt("goods_ys2"));
+			goods.setGoods_state(resultSet.getString("goods_state"));
 		}
 		return goods;
 		
+	}
+	
+	//테스트 메서드
+	
+	public Book bookInfo() throws SQLException{
+		Book book = new Book();
+		
+		String sql = "SELECT book_checkin, book_checkout FROM book WHERE book_state=1";
+		preparedStatement = connection.prepareStatement(sql);
+		
+		resultSet = preparedStatement.executeQuery();
+		if(resultSet.next()){
+			book.setBook_checkin(resultSet.getString("book_checkin"));
+			book.setBook_checkout(resultSet.getString("book_checkout"));
+		}
+		return book;	
 	}
 	
 }

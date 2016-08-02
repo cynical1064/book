@@ -2,17 +2,17 @@ body, html {
 	padding:0px;
 	margin:0px;
 	
-	background-attachment: fixed;
+	/* background-attachment: fixed;
 	text-align:center;
 	color:#fff;
 	line-height: 1.4em;
-	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-family: "Trebuchet MS", Helvetica, sans-serif; */
 }
 
 h1 {
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 	text-align: center;
-	font-size: 77px;
+	font-size: 40px;
 	text-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);
 }
 h2 {

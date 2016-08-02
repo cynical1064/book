@@ -4,6 +4,8 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat, java.util.Calendar, java.util.Date" %>
+<%@ page import="com.tour.dto.*" %>
+<%@ page import="com.tour.dao.*" %>
 
 <link rel="stylesheet" href="css/monthly.css">
 <link href="css/style.css" rel='stylesheet' >
@@ -290,12 +292,16 @@ date_month_next = cal.get(Calendar.MONTH);
 						String td_str = "";
 						String link_str = "";
 						
+						//DB에서 예약 가능한지 상태 값을 가져오기위해 메서드 호출 객체 생성
+						BookDao bookDao = new BookDao();	
+						boolean result = false;
 						for(int ju = 0; ju < jcount; ju++)
 						{
 						  //out.println("<div>");
-        
+        					
 								for(i = 0; i < 7; i++)
 								{
+									
 									 if(firstday.get(Calendar.DAY_OF_WEEK) < count)
 									 {
 												_day = count - firstday.get(Calendar.DAY_OF_WEEK);
@@ -320,13 +326,45 @@ date_month_next = cal.get(Calendar.MONTH);
 										calday.set(toYear, toMonth, _day);
 										calday_str = sdf.format(calday.getTime());
 										
+										
+										
 										td_str = "";
+										
+										//DB에서 예약 정보를 확인
+										//Goods goods = bookDao.goodsInfo();
+										Book book = bookDao.bookInfo();
+										
+										
+										String state = toYear+""+(toMonth+1)+_day;
+										String test = null;
+										if(book.getBook_checkin().equals(state)){
+											result = true;
+											System.out.println("true" + book.getBook_checkin() +"-" + state);
+										}else if(book.getBook_checkout().equals(state)){
+											result = false;
+											System.out.println("false" + book.getBook_checkin() +"-" + state);
+										}
+										System.out.println("나머지" + book.getBook_checkin() +"-" + state);
+										
+										if(result){
+											test = "예약불가";
+										}else{
+											test = "예약가능";
+										}
+										
+										//상태값이 0이면 예약가능 1이면 불가능
+										//if(goods.getGoods_state().equals("0")){
+										//	state = "예약가능";
+										//}else{
+										//	state = "예약불가";
+										//}
 										
 										// 일(SUN)
 										if(i == 0)
 										{
 												td_str += "<a href='#' id='sun' class='monthly-day monthly-day-event'>";
-												td_str += "<div class='monthly-day-number'>" + day_str + "</div>";
+												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
+												td_str += "<label>" + test + "</label>";
 												//td_str += "<em class='sun'>" + day_str + "</em>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
@@ -335,7 +373,8 @@ date_month_next = cal.get(Calendar.MONTH);
 										else if(i == 6)
 										{
 												td_str += "<a href='#' class='monthly-day monthly-day-event' id='sat'>";
-												td_str += "<div class='monthly-day-number'>" + day_str + "</div>";
+												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
+												td_str += "<label>" + test + "</label>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
 										}
@@ -343,7 +382,8 @@ date_month_next = cal.get(Calendar.MONTH);
 										else
 										{
 												td_str += "<a href='#' class='monthly-day monthly-day-event'>";
-												td_str += "<div class='monthly-day-number'>" + day_str + "</div>";
+												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
+												td_str += "<label>" + test + "</label>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
 										}
@@ -378,11 +418,11 @@ date_month_next = cal.get(Calendar.MONTH);
 					<div class="monthly" id="chkOut"></div>
 				</div>
 		</li>
-	 </form>	
+	
 		<li>
 			<h2 id="processBook">예약하기</h2>
 		</li>
 	</ul>
-	
+</form>	
 </div>
 </div>
