@@ -66,12 +66,12 @@ public class BookDao {
 	
 	//테스트 메서드
 	
-	public Book bookInfo() throws SQLException{
+	public Book bookInfo(String roomName) throws SQLException{
 		Book book = new Book();
 		
-		String sql = "SELECT book_checkin, book_checkout FROM book WHERE book_state=1";
+		String sql = "SELECT book_checkin, book_checkout FROM book WHERE goods_name=? AND book_state=1";
 		preparedStatement = connection.prepareStatement(sql);
-		
+		preparedStatement.setString(1, roomName);
 		resultSet = preparedStatement.executeQuery();
 		if(resultSet.next()){
 			book.setBook_checkin(resultSet.getString("book_checkin"));

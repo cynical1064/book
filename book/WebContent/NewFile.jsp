@@ -73,11 +73,11 @@ $(document).ready(function(){
 		
 	});
 	
-	$('#processBook').click(function(){
+/* 	$('#processBook').click(function(){
 		if(){}
 		$('form').submit();
 		
-	})
+	}) */
 	
 });
 </script>
@@ -248,14 +248,14 @@ date_month_next = cal.get(Calendar.MONTH);
 
 %>
 
-
+<%@ include file="./module/header.jsp" %>
 
 <div id="bookWrap" style="display:inline-block; padding-top:58px;">
 <div id="calWrap" style="float:left; width:600px; padding-top:18px; box-shadow: 0 13px 40px;" class="calender_box">
 			
 			<div  class="calender_date">
 				<h2>
-					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"><</a>
+					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"></a>
 					<span><strong id="year"><%=toYear%></strong>년 <strong  id="month"><%=toMonth + 1%></strong>월</span>
 					<a href="<%=req_str%>&amp;y=<%=date_year_next%>&amp;m=<%=date_month_next + 1%>">></a>
 				</h2>
@@ -295,6 +295,7 @@ date_month_next = cal.get(Calendar.MONTH);
 						//DB에서 예약 가능한지 상태 값을 가져오기위해 메서드 호출 객체 생성
 						BookDao bookDao = new BookDao();	
 						boolean result = false;
+						String roomName = request.getParameter("roomName");
 						for(int ju = 0; ju < jcount; ju++)
 						{
 						  //out.println("<div>");
@@ -332,7 +333,7 @@ date_month_next = cal.get(Calendar.MONTH);
 										
 										//DB에서 예약 정보를 확인
 										//Goods goods = bookDao.goodsInfo();
-										Book book = bookDao.bookInfo();
+										Book book = bookDao.bookInfo(roomName);
 										
 										
 										String state = toYear+""+(toMonth+1)+_day;

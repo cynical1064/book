@@ -2,17 +2,45 @@ body, html {
 	padding:0px;
 	margin:0px;
 	
-	/* background-attachment: fixed;
+	background-attachment: fixed;
 	text-align:center;
 	color:#fff;
 	line-height: 1.4em;
-	font-family: "Trebuchet MS", Helvetica, sans-serif; */
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
+li{list-style:none;}
+#navWrap{border-bottom:1px solid #ccc;}
+#logo{float:left; padding-left:50px; cursor:pointer;}
+#nav{float:right; padding-top:50px;}
+nav li{font-size:16px; color:#434343; font-weight:bold; float:left; margin:0 15px; cursor:pointer;}
+nav li:hover{border-bottom:3px solid #434343;}
+#adminLogin{font-size:12px; height:20px; color:#434343; float:right; padding-top:63px; padding-right:60px; cursor:pointer;}
+
+#container{width:100%; height:auto;}
+#container #leftMenu{width:33.3%;}
+#container #leftMenu .leftNav{width:118px; text-align:center;}
+#container #leftMenu .leftNav dt{color:#434343; border-bottom:3px solid #ccc; line-height:1.5em; margin-bottom:10px;}
+#container #leftMenu .leftNav{float:left;}
+#container #leftMenu .leftNav dt{color:#434343; border-bottom:2px solid #ccc; line-height:1.5em; width:100%; }
+#container #leftMenu .leftNav dd{font-size:14px; color:#434343; line-height:2.5em; width:100%; }
+#container #leftMenu .leftNav .activeLeft{background:#434343; color:#fff;}
+#container .content{width:66.6%;}
+
+#container .content #roomInfo{text-align:left;}
+#container .content #roomImg{float:left;}
+#container .content h4{float:left; color:#434343;}
+#container .content #roomInfo{float:left;}
+#container .content #roomInfo .infoTitle{color:#434343; font-weight:bold; padding-left:20px;}
+#container .content .roomInfo .infoContent{}
+
+
+
+
 
 h1 {
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 	text-align: center;
-	font-size: 40px;
+	font-size: 77px;
 	text-shadow: 0 0px 30px rgba(0, 0, 0, 0.2);
 }
 h2 {
