@@ -151,15 +151,15 @@ Monthly 2.0.3 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 			if (options.mode == 'event') {
 				// Remove previous events
 				// Add Events
-				//$.get(''+options.xmlUrl+'', function(d){
-					$(document).find('.hiddenEvent').each(function(i){
+				$.get(''+options.xmlUrl+'', function(d){
+					$(d).find('event').each(function(){
 						// Year [0]   Month [1]   Day [2]
-						var fullstartDate = $(this).find('.startDate').eq(i).text(),
+						var fullstartDate = $(this).find('startdate').text(),
 							startArr = fullstartDate.split("-"),
 							startYear = startArr[0],
 							startMonth = parseInt(startArr[1], 10),
 							startDay = parseInt(startArr[2], 10),
-							fullendDate = $(this).find('.endDate').text(),
+							fullendDate = $(this).find('enddate').text(),
 							endArr = fullendDate.split("-"),
 							endYear = endArr[0],
 							endMonth = parseInt(endArr[1], 10),
@@ -176,8 +176,7 @@ Monthly 2.0.3 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 							endPeriod = 'AM',
 							eventLink = '';
 							roomname = $(this).find('room').text();
-							alert(fullstartDate);
-							alert(fullendDate);
+
 						/* Convert times to 12 hour & determine AM or PM */
 						if(parseInt(startSplit[0]) >= 12) {
 							var startTime = (startSplit[0] - 12)+':'+startSplit[1]+'';
@@ -264,7 +263,7 @@ Monthly 2.0.3 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 
 						}
 					});
-				//});
+				});
 
 			}
 			
@@ -373,7 +372,7 @@ Monthly 2.0.3 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 			var selectRoom = $(this).attr('title')
 			var chkInTarget = $('#chkInTarget').val();
 			var chkOutTarget = $('#chkOutTarget').val();
-			
+
 			// If there isn't a link, don't go anywhere
 			if(selectRoom == '예약가능'){
 				

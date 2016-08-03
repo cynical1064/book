@@ -4,12 +4,15 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat, java.util.Calendar, java.util.Date" %>
+<%@ page import="com.tour.dto.*" %>
+<%@ page import="com.tour.dao.*" %>
 
 <link rel="stylesheet" href="css/monthly.css">
 <link href="css/style.css" rel='stylesheet' >
 <script type="text/javascript" src="js/jquery.js"></script>
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 <script type="text/javascript" src="js/monthly.js"></script>
+<script src="./dev/pickout.js"></script>
 <script>
 $(document).ready(function(){
 
@@ -27,7 +30,7 @@ $(document).ready(function(){
 	$('.monthly-day-number').each(function(i){
 		
 		var calDay = $('.monthly-day-number').eq(i).text();
-	
+
 		if(calYear == currentYear && calMonth == currentMonth && calDay == currentDay){				
 			
 			$(this).addClass('currentDay');			
@@ -38,16 +41,20 @@ $(document).ready(function(){
 	
 	$('.monthly-day').click(function(){
 		
-		var thisDay = $(this).text();
+		var thisDay = $(this).find('.monthly-day-number').text();
+		var bookState = $(this).find('label').text();
 		
-		if(thisDay != ''){
+		if(bookState == '예약불가'){
+			
+			alert('예약 가능한 날짜를 선택해주세요');
+			
+		}else if(thisDay != ''){
 			
 			$('#chkInTarget').val(thisDay+"/"+currentMonth+"/"+currentYear);
 		
 		}
 		
-	});
-	
+	});	
 	
 	$('#chkIn').monthly({
 		mode: 'picker',
@@ -71,11 +78,48 @@ $(document).ready(function(){
 		
 	});
 	
-	$('#processBook').click(function(){
-		 
-		$('form').submit();
-		
+
+	// With Search
+	pickout.to({
+		el:'.pickout',
+		search: true,
+		txtBtnMultiple: 'CONFIRMAR SELECIONADAS'
 	});
+
+	
+	$('.btn').click(function(){
+		
+		if($('#chkInTarget').val() == ''){
+			
+			alert('체크인 날짜를 확인해주세요');
+			
+		}else if($('#chkOutTarget').val() == ''){
+			
+			alert('체크아웃 날짜를 확인해주세요');
+			
+		}else if($('#count').val() == ''){
+			
+			alert('인원 수를 체크해주세요');
+			
+		}else if($('#pay').val() == ''){
+			
+			alert('결제 방식을 체크해주세요');
+			
+		}else if($('#name').val() == ''){
+			
+			alert('예약자 명을 입력해주세요');
+			
+		}else if($('#phone').val() == ''){
+			
+			alert('연락처를 입력해주세요');
+			
+		}else{
+			
+			$('form').submit();
+			
+		}
+		
+	})
 	
 });
 </script>
@@ -97,7 +141,55 @@ body{color:#434343;}
 			text-decoration: none;}
 #calWrap{float:right;}
 #chkWrap{float:right;}
-</style>
+		*{padding:0;margin:0;}
+		body {
+			font: 300 15px Roboto, Calibri;
+		}
+
+		.content {
+			margin:50px auto 0;
+			width:300px;
+		}
+
+		h2 {
+			margin-bottom:10px;
+		}
+
+		h3 {			
+			
+		}
+
+		.form-group {
+			width:250px;
+			float:left;
+			margin:5px 0;
+		}
+
+		label{
+			margin-bottom:10px;
+			float:left;			
+		}
+
+		.btn{
+			margin-top:20px;
+			padding:6px 14px 6px;
+			background:#1abc9c;
+			color:#fff;
+			border:none;
+			border-radius:100px;
+			font:400 14px Roboto;
+			cursor:pointer;
+		}
+
+		.field-input, select{
+			width:calc(100% - 20px);
+			float:left;
+			padding:10px;
+			font-family:inherit;
+		}		
+
+	</style>
+	<link rel="stylesheet" href="./dev/pickout.css">
 <%
 request.setCharacterEncoding("UTF-8");
 String[] time_array = {"10:00", "13:30", "15:30"};
@@ -245,15 +337,15 @@ date_month_next = cal.get(Calendar.MONTH);
 
 
 %>
-<%@ include file="./module/header.jsp" %>
 
+<%@ include file="./module/header.jsp" %>
 
 <div id="bookWrap" style="display:inline-block; padding-top:58px;">
 <div id="calWrap" style="float:left; width:600px; padding-top:18px; box-shadow: 0 13px 40px;" class="calender_box">
 			
 			<div  class="calender_date">
 				<h2>
-					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"><</a>
+					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"></a>
 					<span><strong id="year"><%=toYear%></strong>년 <strong  id="month"><%=toMonth + 1%></strong>월</span>
 					<a href="<%=req_str%>&amp;y=<%=date_year_next%>&amp;m=<%=date_month_next + 1%>">></a>
 				</h2>
@@ -290,12 +382,17 @@ date_month_next = cal.get(Calendar.MONTH);
 						String td_str = "";
 						String link_str = "";
 						
+						//DB에서 예약 가능한지 상태 값을 가져오기위해 메서드 호출 객체 생성
+						BookDao bookDao = new BookDao();	
+						boolean result = false;
+						String roomName = request.getParameter("roomName");
 						for(int ju = 0; ju < jcount; ju++)
 						{
 						  //out.println("<div>");
-        
+        					
 								for(i = 0; i < 7; i++)
 								{
+									
 									 if(firstday.get(Calendar.DAY_OF_WEEK) < count)
 									 {
 												_day = count - firstday.get(Calendar.DAY_OF_WEEK);
@@ -320,13 +417,45 @@ date_month_next = cal.get(Calendar.MONTH);
 										calday.set(toYear, toMonth, _day);
 										calday_str = sdf.format(calday.getTime());
 										
+										
+										
 										td_str = "";
+										
+										//DB에서 예약 정보를 확인
+										//Goods goods = bookDao.goodsInfo();
+										Book book = bookDao.bookInfo(roomName);
+										
+										
+										String state = toYear+""+(toMonth+1)+_day;
+										String test = null;
+										if(book.getBook_checkin().equals(state)){
+											result = true;
+											System.out.println("true" + book.getBook_checkin() +"-" + state);
+										}else if(book.getBook_checkout().equals(state)){
+											result = false;
+											System.out.println("false" + book.getBook_checkin() +"-" + state);
+										}
+										System.out.println("나머지" + book.getBook_checkin() +"-" + state);
+										
+										if(result){
+											test = "예약불가";
+										}else{
+											test = "예약가능";
+										}
+										
+										//상태값이 0이면 예약가능 1이면 불가능
+										//if(goods.getGoods_state().equals("0")){
+										//	state = "예약가능";
+										//}else{
+										//	state = "예약불가";
+										//}
 										
 										// 일(SUN)
 										if(i == 0)
 										{
 												td_str += "<a href='#' id='sun' class='monthly-day monthly-day-event'>";
-												td_str += "<div class='monthly-day-number'>" + day_str + "</div>";
+												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
+												td_str += "<label>" + test + "</label>";
 												//td_str += "<em class='sun'>" + day_str + "</em>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
@@ -335,7 +464,8 @@ date_month_next = cal.get(Calendar.MONTH);
 										else if(i == 6)
 										{
 												td_str += "<a href='#' class='monthly-day monthly-day-event' id='sat'>";
-												td_str += "<div class='monthly-day-number'>" + day_str + "</div>";
+												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
+												td_str += "<label>" + test + "</label>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
 										}
@@ -343,7 +473,8 @@ date_month_next = cal.get(Calendar.MONTH);
 										else
 										{
 												td_str += "<a href='#' class='monthly-day monthly-day-event'>";
-												td_str += "<div class='monthly-day-number'>" + day_str + "</div>";
+												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
+												td_str += "<label>" + test + "</label>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
 										}
@@ -365,24 +496,67 @@ date_month_next = cal.get(Calendar.MONTH);
 	<form action="./dateTest.jsp" method="post">
 	<ul class="clearFix">
 		<li>
-				<h2>체크인</h2>
-				<div style="display:inline-block; width:250px;">
-					<input type="text" id="chkInTarget" name="chkInTarget">
-					<div class="monthly" id="chkIn"></div>
-				</div>
+			<label for="chkInTarget"><h3>체크인</h3></label>
+			<div>
+				<input type="text" id="chkInTarget" name="chkInTarget">
+				<div class="monthly" id="chkIn" style="z-index:1;"></div>
+			</div>
 		</li>		
 		<li>
-				<h2>체크아웃</h2>
-				<div style="display:inline-block; width:250px;">
-					<input type="text" id="chkOutTarget" name="chkOutTarget">
-					<div class="monthly" id="chkOut"></div>
-				</div>
+			<label for="chkOutTarget"><h3>체크아웃</h3></label>
+			<div>
+				<input type="text" id="chkOutTarget" name="chkOutTarget">
+				<div class="monthly" id="chkOut" style="z-index:1;"></div>
+			</div>
 		</li>
-	 </form>	
 		<li>
-			<h2 id="processBook">예약하기</h2>
+			<div class="form-group">
+				<label for="count"><h3>인원</h3></label>
+				<select name="count" id="count" class="pickout" placeholder="인원 수">
+					<option value=""></option>	
+					<option value="2">2인</option>				
+					<option value="4">3~4인</option>
+					<option value="5">4인 초과</option>
+				</select>			
+			</div>
+		</li>
+		<li>
+			<div class="form-group">
+				<label for="option"><h3>옵션</h3></label>
+				<select name="option" id="option" multiple class="pickout" placeholder="옵션">
+					<option value=""></option>				
+					<option value="bbq">바비큐+숯</option>
+					<option value="jockgu">족구장+네트</option>
+					<option value="referenceRoom">연회장</option>
+				</select>			
+			</div>
+		</li>
+		<li>	
+			<div class="form-group">
+				<label for="pay"><h3>결제방식</h3></label>
+				<select name="pay" id="pay" class="option pickout" placeholder="결제방식">
+					<option value=""></option> <!-- Value empty when option not selected -->		
+					<option value="card">카드결제</option>
+					<option value="bank">무통장입급</option>
+				</select>			
+			</div>	
+		</li>
+		<li>
+			<div class="form-group">
+				<label for="name"><h3>예약자 명</h3></label>
+				<input  type="text" name="name" id="name" placeholder="예약자">
+				<label for="phone"><h3>휴대전화</h3></label>
+				<input  type="text" name="phone" id="phone" placeholder="휴대전화">		
+			</div>
+		</li>
+		<li>
+			<div class="form-group">
+				<div class="btn">
+					SEND
+				</div>
+			</div>		
 		</li>
 	</ul>
-	
+</form>	
 </div>
 </div>
