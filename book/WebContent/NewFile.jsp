@@ -72,10 +72,10 @@ $(document).ready(function(){
 	});
 	
 	$('#processBook').click(function(){
-		if(){}
+		 
 		$('form').submit();
 		
-	})
+	});
 	
 });
 </script>
@@ -245,7 +245,7 @@ date_month_next = cal.get(Calendar.MONTH);
 
 
 %>
-
+<%@ include file="./module/header.jsp" %>
 
 
 <div id="bookWrap" style="display:inline-block; padding-top:58px;">
