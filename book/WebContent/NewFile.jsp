@@ -54,6 +54,10 @@ $(document).ready(function(){
 		}
 		
 	});
+<<<<<<< HEAD
+=======
+	
+>>>>>>> branch 'master' of https://github.com/cynical1064/book.git
 	$('#chkIn').monthly({
 		mode: 'picker',
 		target: '#chkInTarget',
@@ -220,8 +224,13 @@ body{color:#434343;}
 request.setCharacterEncoding("UTF-8");
 String[] time_array = {"10:00", "13:30", "15:30"};
 
+
+
+
+
 //그달에 해당 일에 방이 예약이 되는지 상태 저장 배열
 int[] date_data_array = new int[35];
+//휴일 저장 배열
 int[] holiday = new int [12];
 int[][] time_data_array = new int[32][4];
 
@@ -396,7 +405,9 @@ date_month_next = cal.get(Calendar.MONTH);
 						int count  = 2;   // 첫번째 요일까지 공백 때분에...
 						int _day   = 0;
 						int tcnt   = 0;
+
 						int holidayCount = 0;
+
 						String app_day_str = "";
 						String day_str = "";
 						String td_str = "";
@@ -542,6 +553,7 @@ date_month_next = cal.get(Calendar.MONTH);
 								}
 
 					     	}
+
 						for(int j = 0; j<holiday.length; j++){
 							System.out.println("휴일 : " + holiday[j]);
 						}

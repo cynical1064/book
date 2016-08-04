@@ -42,8 +42,29 @@ public class BookDao {
 		Class.forName(driver);
 		connection = DriverManager.getConnection(url, dbUser, dbPass);
 	}
-	
-	
+
+	//--------------------------------------------------------------------------------------------------------
+	//						예약 테이블 insert메서드 
+	//--------------------------------------------------------------------------------------------------------
+	public int bookInsert(Book book) throws SQLException{
+		int result = 0;
+		
+		String insertSql = "INSERT INTO book(goods_name, book_price, book_name, book_phone, book_pay, book_date, book_checkin, book_checkout, book_count, book_state)VALUES(?,40000,?,?,?,SYSDATE(),?,?,?,'1')";
+		preparedStatement = connection.prepareStatement(insertSql);
+		preparedStatement.setString(1, book.getGoods_name());
+		preparedStatement.setString(2, book.getBook_name());
+		preparedStatement.setString(3, book.getBook_phone());
+		preparedStatement.setString(4, book.getBook_pay());
+		preparedStatement.setString(5, book.getBook_checkin());
+		preparedStatement.setString(6, book.getBook_checkout());
+		preparedStatement.setInt(7, book.getBook_count());
+		
+		result = preparedStatement.executeUpdate();
+		System.out.println(preparedStatement);
+		
+		close();
+		return result;
+	}
 	//--------------------------------------------------------------------------------------------------------
 	//						예약이 되어있는지 달력 확인 메서드 
 	//--------------------------------------------------------------------------------------------------------
@@ -87,29 +108,6 @@ public class BookDao {
 		
 		close();
 		return bookList;	
-	}
-	
-	//--------------------------------------------------------------------------------------------------------
-	//						예약 테이블 insert메서드 
-	//--------------------------------------------------------------------------------------------------------
-	public int bookInsert(Book book) throws SQLException{
-		int result = 0;
-		
-		String insertSql = "INSERT INTO book(goods_name, book_price, book_name, book_phone, book_pay, book_date, book_checkin, book_checkout, book_count, book_state)VALUES(?,40000,?,?,?,SYSDATE(),?,?,?,'1')";
-		preparedStatement = connection.prepareStatement(insertSql);
-		preparedStatement.setString(1, book.getGoods_name());
-		preparedStatement.setString(2, book.getBook_name());
-		preparedStatement.setString(3, book.getBook_phone());
-		preparedStatement.setString(4, book.getBook_pay());
-		preparedStatement.setString(5, book.getBook_checkin());
-		preparedStatement.setString(6, book.getBook_checkout());
-		preparedStatement.setInt(7, book.getBook_count());
-		
-		result = preparedStatement.executeUpdate();
-		System.out.println(preparedStatement);
-		
-		close();
-		return result;
 	}
 	
 	
