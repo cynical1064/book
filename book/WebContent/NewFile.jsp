@@ -90,6 +90,7 @@ $(document).ready(function(){
 	$('.btn').click(function(){
 		
 		var chkInVal = $('#chkInTarget').val();
+<<<<<<< HEAD
 		var chkInArray = chkInVal.split('/');
 		var cout1 = Number(chkInArray[2]);
 		var chkOutVal = $('#chkOutTarget').val()
@@ -97,6 +98,16 @@ $(document).ready(function(){
 		var chkOutArray = chkOutVal.split('/');
 		var cout2 = Number(chkOutArray[2]);
 		//alert(chkInArray[2] > chkOutArray[2]);		
+=======
+		var chkInArray = chkInVal.split('/');//문자열로 자르기 때문에 parsing작업이 필요함
+		var parseChkInArray = parseInt(chkInArray[2]);//parsing작업
+		
+		var chkOutVal = $('#chkOutTarget').val();
+		var chkOutArray = chkOutVal.split('/');
+		var parseChkOutArray = parseInt(chkOutArray[2]);
+		
+		//alert(parseChkInArray>parseChkOutArray);
+>>>>>>> branch 'master' of https://github.com/cynical1064/book.git
 		
 		if($('#chkInTarget').val() == ''){
 			
@@ -107,6 +118,11 @@ $(document).ready(function(){
 			alert('체크아웃 날짜를 확인해주세요');
 			
 		}else if(cout1 > cout2){
+			
+			alert('체크아웃 날짜는 체크인 날짜보다 작거나 같을 수 없습니다.');
+			$('#chkOutTarget').focus();
+			
+		}else if(parseChkInArray >= parseChkOutArray){
 			
 			alert('체크아웃 날짜는 체크인 날짜보다 작거나 같을 수 없습니다.');
 			$('#chkOutTarget').focus();
