@@ -90,12 +90,12 @@ $(document).ready(function(){
 	$('.btn').click(function(){
 		
 		var chkInVal = $('#chkInTarget').val();
-		var chkInArray = chkInVal.substring(7,10);//문자열로 자르기 때문에 parsing작업이 필요함
-		var parseChkInArray = parseInt(chkInArray);//parsing작업
+		var chkInArray = chkInVal.split('/');//문자열로 자르기 때문에 parsing작업이 필요함
+		var parseChkInArray = parseInt(chkInArray[2]);//parsing작업
 		
-		var chkOutVal = $('#chkOutTarget').val()
-		var chkOutArray = chkOutVal.substring(7,10);
-		var parseChkOutArray = parseInt(chkOutArray)
+		var chkOutVal = $('#chkOutTarget').val();
+		var chkOutArray = chkOutVal.split('/');
+		var parseChkOutArray = parseInt(chkOutArray[2]);
 		
 		//alert(parseChkInArray>parseChkOutArray);
 		
