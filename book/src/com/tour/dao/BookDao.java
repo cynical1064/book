@@ -1,6 +1,7 @@
 package com.tour.dao;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 import com.tour.dto.Book;
 import com.tour.dto.Goods;
@@ -64,20 +65,42 @@ public class BookDao {
 		
 	}
 	
-	//테스트 메서드
+	//--------------------------------------------------------------------------------------------------------
+	//						예약정보 확인 메서드 
+	//--------------------------------------------------------------------------------------------------------
 	
-	public Book bookInfo(String roomName) throws SQLException{
-		Book book = new Book();
+	public ArrayList<Book> bookInfo(String roomName) throws SQLException{
+		Book book = null;
+		ArrayList<Book> bookList = new ArrayList<Book>();
 		
 		String sql = "SELECT book_checkin, book_checkout FROM book WHERE goods_name=? AND book_state=1";
 		preparedStatement = connection.prepareStatement(sql);
 		preparedStatement.setString(1, roomName);
+		
 		resultSet = preparedStatement.executeQuery();
-		if(resultSet.next()){
+		
+		while(resultSet.next()){
+			book = new Book();
 			book.setBook_checkin(resultSet.getString("book_checkin"));
 			book.setBook_checkout(resultSet.getString("book_checkout"));
+			bookList.add(book);
 		}
-		return book;	
+		
+		if(bookList.size() == 0){
+			sql = "SELECT goods_name, book_checkin, book_checkout FROM book WHERE book_state=1";
+			preparedStatement = connection.prepareStatement(sql);
+			
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()){
+				book = new Book();
+				book.setBook_checkin(resultSet.getString("book_checkin"));
+				book.setBook_checkout(resultSet.getString("book_checkout"));
+				book.setGoods_name(resultSet.getString("goods_name"));
+				bookList.add(book);
+			}
+		}
+		return bookList;	
 	}
 	
 }

@@ -50,11 +50,11 @@ $(document).ready(function(){
 			
 		}else if(thisDay != ''){
 			
-			$('#chkInTarget').val(thisDay+"/"+currentMonth+"/"+currentYear);
+			$('#chkInTarget').val(currentYear+"/"+currentMonth+"/"+thisDay);
 		
 		}
 		
-	});	
+	});
 	
 	$('#chkIn').monthly({
 		mode: 'picker',
@@ -89,6 +89,15 @@ $(document).ready(function(){
 	
 	$('.btn').click(function(){
 		
+		var chkInVal = $('#chkInTarget').val();
+		var chkInArray = chkInVal.split('/');
+		var cout1 = Number(chkInArray[2]);
+		var chkOutVal = $('#chkOutTarget').val()
+		
+		var chkOutArray = chkOutVal.split('/');
+		var cout2 = Number(chkOutArray[2]);
+		//alert(chkInArray[2] > chkOutArray[2]);		
+		
 		if($('#chkInTarget').val() == ''){
 			
 			alert('체크인 날짜를 확인해주세요');
@@ -96,6 +105,11 @@ $(document).ready(function(){
 		}else if($('#chkOutTarget').val() == ''){
 			
 			alert('체크아웃 날짜를 확인해주세요');
+			
+		}else if(cout1 > cout2){
+			
+			alert('체크아웃 날짜는 체크인 날짜보다 작거나 같을 수 없습니다.');
+			$('#chkOutTarget').focus();
 			
 		}else if($('#count').val() == ''){
 			
@@ -195,7 +209,7 @@ request.setCharacterEncoding("UTF-8");
 String[] time_array = {"10:00", "13:30", "15:30"};
 
 
-int[] date_data_array = new int[32];
+int[] date_data_array = new int[35];
 int[][] time_data_array = new int[32][4];
 
 
@@ -376,37 +390,74 @@ date_month_next = cal.get(Calendar.MONTH);
 						int count  = 2;   // 첫번째 요일까지 공백 때분에...
 						int _day   = 0;
 						int tcnt   = 0;
-						
+						//int dayCount = 0;
 						String app_day_str = "";
 						String day_str = "";
 						String td_str = "";
 						String link_str = "";
 						
 						//DB에서 예약 가능한지 상태 값을 가져오기위해 메서드 호출 객체 생성
+						String roomName = request.getParameter("roomName");
 						BookDao bookDao = new BookDao();	
 						boolean result = false;
-						String roomName = request.getParameter("roomName");
+						ArrayList<Book> bookList = new ArrayList<Book>();
+						bookList = bookDao.bookInfo(roomName);
+						//예약이 이미 되어있는곳을 달력에 표시해주기 위해
+						//배열에 예약이 되어있는 날짜 표시
+						for(int j = 0; j < bookList.size(); j++){
+							int checkInDay = 0;
+							int checkOutDay = 0;
+							int checkInMonth = 0;
+							int checkInYear = 0;
+							int index = 0;
+							
+							index = bookList.get(i).getBook_checkin().lastIndexOf("/");
+							System.out.println("index1->" + index);
+							checkInDay = Integer.parseInt(bookList.get(i).getBook_checkin().substring(index+1));
+							/* index = bookList.get(i).getBook_checkin().indexOf("/");
+							checkInMonth = Integer.parseInt(bookList.get(i).getBook_checkin().substring(index+1)); */
+							
+							index = bookList.get(i).getBook_checkout().lastIndexOf("/");
+							System.out.println("index2->" + index);
+							checkOutDay = Integer.parseInt(bookList.get(i).getBook_checkout().substring(index+1));
+							
+							for(int k = checkInDay; k < checkOutDay; k++){
+								date_data_array[k] = 1;
+								System.out.println("k->" + k);
+							}
+						}
+						int tt = 0;
+						for(int a : date_data_array){
+							System.out.println(tt+"번째"+a);
+							tt++;
+						}
+						//Iterator<Book> iterator = bookList.iterator();
 						for(int ju = 0; ju < jcount; ju++)
 						{
+						  
 						  //out.println("<div>");
         					
 								for(i = 0; i < 7; i++)
 								{
-									
-									 if(firstday.get(Calendar.DAY_OF_WEEK) < count)
-									 {
-												_day = count - firstday.get(Calendar.DAY_OF_WEEK);
-												
-												if(_day > lastday.get(Calendar.DATE))
-												{
-													 _day = 0;
-													 day_str = "";
-										  }
-										  else
-										  {
-											   day_str = "" + _day;
-										  }
-								  }
+									String stateDay = toYear+""+(toMonth+1)+(count - firstday.get(Calendar.DAY_OF_WEEK));
+									String state = "";
+									if(firstday.get(Calendar.DAY_OF_WEEK) < count) {
+										_day = count - firstday.get(Calendar.DAY_OF_WEEK);
+										
+										if(_day > lastday.get(Calendar.DATE)){
+											_day = 0;
+											day_str = "";
+								 		}else{
+											day_str = "" + _day;
+									  		if(date_data_array[_day] == 1){
+												state = "예약불가";
+											}else{
+												state = "예약가능";
+											}
+									   		System.out.println("daycount=>" + _day);
+									   		//dayCount++;
+								  		}
+								  }	
 								  
 									 count++;
 									 
@@ -423,25 +474,7 @@ date_month_next = cal.get(Calendar.MONTH);
 										
 										//DB에서 예약 정보를 확인
 										//Goods goods = bookDao.goodsInfo();
-										Book book = bookDao.bookInfo(roomName);
 										
-										
-										String state = toYear+""+(toMonth+1)+_day;
-										String test = null;
-										if(book.getBook_checkin().equals(state)){
-											result = true;
-											System.out.println("true" + book.getBook_checkin() +"-" + state);
-										}else if(book.getBook_checkout().equals(state)){
-											result = false;
-											System.out.println("false" + book.getBook_checkin() +"-" + state);
-										}
-										System.out.println("나머지" + book.getBook_checkin() +"-" + state);
-										
-										if(result){
-											test = "예약불가";
-										}else{
-											test = "예약가능";
-										}
 										
 										//상태값이 0이면 예약가능 1이면 불가능
 										//if(goods.getGoods_state().equals("0")){
@@ -450,12 +483,15 @@ date_month_next = cal.get(Calendar.MONTH);
 										//	state = "예약불가";
 										//}
 										
+									
+										
+										//day_str += "<br/>" + state;
 										// 일(SUN)
 										if(i == 0)
 										{
 												td_str += "<a href='#' id='sun' class='monthly-day monthly-day-event'>";
 												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
-												td_str += "<label>" + test + "</label>";
+												td_str += "<label>" + state + "</label>";
 												//td_str += "<em class='sun'>" + day_str + "</em>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
@@ -465,7 +501,7 @@ date_month_next = cal.get(Calendar.MONTH);
 										{
 												td_str += "<a href='#' class='monthly-day monthly-day-event' id='sat'>";
 												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
-												td_str += "<label>" + test + "</label>";
+												td_str += "<label>" + state + "</label>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
 										}
@@ -474,18 +510,18 @@ date_month_next = cal.get(Calendar.MONTH);
 										{
 												td_str += "<a href='#' class='monthly-day monthly-day-event'>";
 												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
-												td_str += "<label>" + test + "</label>";
+												td_str += "<label>" + state + "</label>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
 										}
 										//td_str += "</div>";
 										
 										out.println(td_str);
+										
 								}
-								
 								//out.println("</div>");  
 					     	}
-                         
+                         	
 										%>
 										
 				
