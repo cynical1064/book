@@ -130,7 +130,7 @@
 			<img src="./images/20149151027381.jpg" />
 			</div>
 			<div>
-				<h3 class="roomName">고시텔</h3>
+				<h3 class="roomName">반지하</h3>
 			</div>
 			<table>
 
@@ -199,7 +199,7 @@
 			<img src="./images/201542014554.jpg" />
 			</div>
 			<div>
-				<h3 class="roomName">반지하</h3>
+				<h3 class="roomName">고시텔</h3>
 			</div>
 			<table>
 
