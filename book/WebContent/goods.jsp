@@ -7,10 +7,6 @@
 <title>Insert title here</title>
 <link href="css/style.css" rel='stylesheet' >
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<!-- bxSlider Javascript file -->
-<link href="./css/jquery.bxslider.css" rel="stylesheet" />
-<script src="./js/jquery.bxslider.min.js"></script>
-<!-- bxSlider CSS file -->
 <script>
 	$(document).ready(function(){		
 		

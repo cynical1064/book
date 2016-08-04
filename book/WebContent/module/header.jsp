@@ -13,19 +13,17 @@
 			
 		<div id="navWrap" class="clearFix">
 			<h2 id="logo">
-				<img src="./images/logo.png" width="200" height="90"/>
+				<img src="./images/logo.png" />
 			</h2>
-			<div id="adminLogin">
-				관리자 로그인
-			</div>
+
 			<nav>
 				<div id="nav">
 					<ul>
-						<li>홈</li>
-						<li>팬션 미리보기</li>
-						<li>주위경관</li>
-						<li>예약하기</li>
-						<li>문의</li>
+						<li>HOME</li>
+						<li id="room">ROOM</li>
+						<li>TOUR</li>
+						<li>RESERVATION</li>
+						<li>BOARD</li>
 					</ul>
 				</div>
 				

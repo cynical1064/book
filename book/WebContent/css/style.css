@@ -11,7 +11,8 @@ body, html {
 li{list-style:none;}
 #navWrap{border-bottom:1px solid #ccc;}
 #logo{float:left; padding-left:50px; cursor:pointer;}
-#nav{float:right; padding-top:50px;}
+#nav{float:right; padding-top:50px; padding-right:50px;}
+#nav #room{color:#543530;}
 nav li{font-size:18px; color:#434343; font-weight:bold; float:left; margin:0 15px; cursor:pointer;}
 nav li:hover{border-bottom:3px solid #434343;}
 #adminLogin{font-size:12px; height:20px; color:#434343; float:right; padding-top:63px; padding-right:60px; cursor:pointer;}

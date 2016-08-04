@@ -61,34 +61,24 @@ public class BookDao {
 			goods.setGoods_ys2(resultSet.getInt("goods_ys2"));
 			goods.setGoods_state(resultSet.getString("goods_state"));
 		}
+		close();
 		return goods;
 		
 	}
 	
 	//--------------------------------------------------------------------------------------------------------
-	//						예약정보 확인 메서드 
+	//						예약이 되어있는지 달력 확인 메서드 
 	//--------------------------------------------------------------------------------------------------------
 	
 	public ArrayList<Book> bookInfo(String roomName) throws SQLException{
 		Book book = null;
 		ArrayList<Book> bookList = new ArrayList<Book>();
-		
-		String sql = "SELECT book_checkin, book_checkout FROM book WHERE goods_name=? AND book_state=1";
-		preparedStatement = connection.prepareStatement(sql);
-		preparedStatement.setString(1, roomName);
-		
-		resultSet = preparedStatement.executeQuery();
-		
-		while(resultSet.next()){
-			book = new Book();
-			book.setBook_checkin(resultSet.getString("book_checkin"));
-			book.setBook_checkout(resultSet.getString("book_checkout"));
-			bookList.add(book);
-		}
-		
-		if(bookList.size() == 0){
-			sql = "SELECT goods_name, book_checkin, book_checkout FROM book WHERE book_state=1";
+		String sql = null;
+		if(roomName != null)
+		{
+			sql = "SELECT book_checkin, book_checkout FROM book WHERE goods_name=? AND book_state=1";
 			preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, roomName);
 			
 			resultSet = preparedStatement.executeQuery();
 			
@@ -96,11 +86,58 @@ public class BookDao {
 				book = new Book();
 				book.setBook_checkin(resultSet.getString("book_checkin"));
 				book.setBook_checkout(resultSet.getString("book_checkout"));
-				book.setGoods_name(resultSet.getString("goods_name"));
 				bookList.add(book);
 			}
 		}
+		
+		else{
+			if(bookList.size() == 0){
+				sql = "SELECT goods_name, book_checkin, book_checkout FROM book WHERE book_state=1";
+				preparedStatement = connection.prepareStatement(sql);
+				
+				resultSet = preparedStatement.executeQuery();
+				
+				while(resultSet.next()){
+					book = new Book();
+					book.setBook_checkin(resultSet.getString("book_checkin"));
+					book.setBook_checkout(resultSet.getString("book_checkout"));
+					book.setGoods_name(resultSet.getString("goods_name"));
+					bookList.add(book);
+				}
+			}
+		}
+		
+		close();
 		return bookList;	
 	}
 	
+	//--------------------------------------------------------------------------------------------------------
+	//						예약 테이블 insert메서드 
+	//--------------------------------------------------------------------------------------------------------
+	public int bookInsert(Book book) throws SQLException{
+		int result = 0;
+		
+		String insertSql = "INSERT INTO book(goods_name, book_price, book_name, book_phone, book_pay, book_date, book_checkin, book_checkout, book_count, book_state)VALUES(?,40000,?,?,?,SYSDATE(),?,?,?,'1')";
+		preparedStatement = connection.prepareStatement(insertSql);
+		preparedStatement.setString(1, book.getGoods_name());
+		preparedStatement.setString(2, book.getBook_name());
+		preparedStatement.setString(3, book.getBook_phone());
+		preparedStatement.setString(4, book.getBook_pay());
+		preparedStatement.setString(5, book.getBook_checkin());
+		preparedStatement.setString(6, book.getBook_checkout());
+		preparedStatement.setInt(7, book.getBook_count());
+		
+		result = preparedStatement.executeUpdate();
+		System.out.println(preparedStatement);
+		
+		close();
+		return result;
+	}
+	
+	
+	public void close(){
+		if (preparedStatement != null) try { preparedStatement.close(); } catch(SQLException ex) {}
+		if (resultSet != null) try { resultSet.close(); } catch(SQLException ex) {}
+		if (connection != null) try { connection.close(); } catch(SQLException ex) {}
+	}
 }
