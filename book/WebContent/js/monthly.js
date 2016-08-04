@@ -356,7 +356,7 @@ Monthly 2.0.3 by Kevin Thornbloom is licensed under a Creative Commons Attributi
 					e.preventDefault();
 				} else {
 					// Otherwise, select the date ...
-					$(''+options.target+'').val(setMonth+'/'+whichDay+'/'+setYear);
+					$(''+options.target+'').val(setYear+'/'+setMonth+'/'+whichDay);
 					// ... and then hide the calendar if it started that way
 					if(options.startHidden == true) {
 						$('#'+uniqueId).hide();

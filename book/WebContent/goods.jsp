@@ -7,10 +7,6 @@
 <title>Insert title here</title>
 <link href="css/style.css" rel='stylesheet' >
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<!-- bxSlider Javascript file -->
-<link href="./css/jquery.bxslider.css" rel="stylesheet" />
-<script src="./js/jquery.bxslider.min.js"></script>
-<!-- bxSlider CSS file -->
 <script>
 	$(document).ready(function(){		
 		
@@ -130,7 +126,7 @@
 			<img src="./images/20149151027381.jpg" />
 			</div>
 			<div>
-				<h3 class="roomName">고시텔</h3>
+				<h3 class="roomName">반지하</h3>
 			</div>
 			<table>
 
@@ -199,7 +195,7 @@
 			<img src="./images/201542014554.jpg" />
 			</div>
 			<div>
-				<h3 class="roomName">반지하</h3>
+				<h3 class="roomName">고시텔</h3>
 			</div>
 			<table>
 
@@ -267,11 +263,7 @@
 <!-- 컨테이너 끝 -->
 
 <!-- 풋터 시작 -->
-<footer>
-	<div id="footer">
-	
-	</div>
-</footer>
+<%@ include file="./module/footer.jsp" %>
 <!-- 풋터 끝 -->
 </body>
 </html>

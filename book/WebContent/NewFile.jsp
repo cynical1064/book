@@ -1,7 +1,6 @@
 <%@ page contentType = "text/html; charset=UTF-8" pageEncoding = "UTF-8"%>
 
 <%@ page import="java.net.*" %>
-<%@ page import="java.sql.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.SimpleDateFormat, java.util.Calendar, java.util.Date" %>
 <%@ page import="com.tour.dto.*" %>
@@ -50,12 +49,11 @@ $(document).ready(function(){
 			
 		}else if(thisDay != ''){
 			
-			$('#chkInTarget').val(thisDay+"/"+currentMonth+"/"+currentYear);
+			$('#chkInTarget').val(currentYear+"/"+currentMonth+"/"+thisDay);
 		
 		}
 		
-	});	
-	
+	});
 	$('#chkIn').monthly({
 		mode: 'picker',
 		target: '#chkInTarget',
@@ -89,6 +87,24 @@ $(document).ready(function(){
 	
 	$('.btn').click(function(){
 		
+		var chkInVal = $('#chkInTarget').val();
+		var chkInArray = chkInVal.split('/');
+		var cout1 = Number(chkInArray[2]);
+		var chkOutVal = $('#chkOutTarget').val()
+		
+		var chkOutArray = chkOutVal.split('/');
+		var cout2 = Number(chkOutArray[2]);
+		//alert(chkInArray[2] > chkOutArray[2]);		
+
+		var chkInArray = chkInVal.split('/');//문자열로 자르기 때문에 parsing작업이 필요함
+		var parseChkInArray = parseInt(chkInArray[2]);//parsing작업
+		
+		var chkOutVal = $('#chkOutTarget').val();
+		var chkOutArray = chkOutVal.split('/');
+		var parseChkOutArray = parseInt(chkOutArray[2]);
+		
+		//alert(parseChkInArray>parseChkOutArray);
+		
 		if($('#chkInTarget').val() == ''){
 			
 			alert('체크인 날짜를 확인해주세요');
@@ -96,6 +112,16 @@ $(document).ready(function(){
 		}else if($('#chkOutTarget').val() == ''){
 			
 			alert('체크아웃 날짜를 확인해주세요');
+			
+		}else if(cout1 > cout2){
+			
+			alert('체크아웃 날짜는 체크인 날짜보다 작거나 같을 수 없습니다.');
+			$('#chkOutTarget').focus();
+			
+		}else if(parseChkInArray >= parseChkOutArray){
+			
+			alert('체크아웃 날짜는 체크인 날짜보다 작거나 같을 수 없습니다.');
+			$('#chkOutTarget').focus();
 			
 		}else if($('#count').val() == ''){
 			
@@ -194,8 +220,9 @@ body{color:#434343;}
 request.setCharacterEncoding("UTF-8");
 String[] time_array = {"10:00", "13:30", "15:30"};
 
-
-int[] date_data_array = new int[32];
+//그달에 해당 일에 방이 예약이 되는지 상태 저장 배열
+int[] date_data_array = new int[35];
+int[] holiday = new int [12];
 int[][] time_data_array = new int[32][4];
 
 
@@ -220,11 +247,8 @@ String rq_yy_str = "";
 String rq_mm_str = "";
 String rq_dd_str = "";
 
-String sql = "";
 String calday_str = "";
 String req_str = "";
-
-ResultSet rs_reservation_forest = null;
 
 
 rq_cmsid  = request.getParameter("cmsid");
@@ -243,10 +267,6 @@ if(rq_mm_str == null || rq_mm_str.equals("")) { rq_mm_str = ""; }
 if(rq_dd_str == null || rq_dd_str.equals("")) { rq_dd_str = ""; }
 
 req_str = request.getContextPath() + "/NewFile.jsp?cmsid=" + rq_cmsid;
-
-// -----------------------------------------------------------------------------
-// 콘텐츠ID 확인
-// -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
 
@@ -345,7 +365,7 @@ date_month_next = cal.get(Calendar.MONTH);
 			
 			<div  class="calender_date">
 				<h2>
-					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"></a>
+					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"><</a>
 					<span><strong id="year"><%=toYear%></strong>년 <strong  id="month"><%=toMonth + 1%></strong>월</span>
 					<a href="<%=req_str%>&amp;y=<%=date_year_next%>&amp;m=<%=date_month_next + 1%>">></a>
 				</h2>
@@ -376,37 +396,99 @@ date_month_next = cal.get(Calendar.MONTH);
 						int count  = 2;   // 첫번째 요일까지 공백 때분에...
 						int _day   = 0;
 						int tcnt   = 0;
-						
+						int holidayCount = 0;
 						String app_day_str = "";
 						String day_str = "";
 						String td_str = "";
 						String link_str = "";
 						
 						//DB에서 예약 가능한지 상태 값을 가져오기위해 메서드 호출 객체 생성
+						String roomName = request.getParameter("roomName");
 						BookDao bookDao = new BookDao();	
 						boolean result = false;
-						String roomName = request.getParameter("roomName");
+						ArrayList<Book> bookList = new ArrayList<Book>();
+						bookList = bookDao.bookInfo(roomName);
+						
+						//예약이 이미 되어있는곳을 달력에 표시해주기 위해
+						//배열에 예약이 되어있는 날짜 표시
+						for(int j = 0; j < bookList.size(); j++){
+							int checkInDay = 0;
+							int checkOutDay = 0;
+							int checkInMonth = 0;
+							int checkOutMonth = 0;
+							int checkInYear = 0;
+							int indexF = 0;
+							int indexL = 0;
+							
+							indexL = bookList.get(j).getBook_checkin().lastIndexOf("/");
+							System.out.println("indexL->" + indexL);
+							checkInDay = Integer.parseInt(bookList.get(j).getBook_checkin().substring(indexL+1));
+							
+							indexL = bookList.get(j).getBook_checkout().lastIndexOf("/");
+							System.out.println("indexL->" + indexL);
+							checkOutDay = Integer.parseInt(bookList.get(j).getBook_checkout().substring(indexL+1));
+							
+							indexF = bookList.get(j).getBook_checkin().indexOf("/");
+							System.out.println("indexF->" + indexF);
+							indexL = bookList.get(j).getBook_checkin().lastIndexOf("/");
+							System.out.println("indexL->" + indexL);
+							checkInMonth = Integer.parseInt(bookList.get(j).getBook_checkin().substring(indexF+1, indexL));
+							System.out.println("checkInMonth ->" + checkInMonth);
+							
+							indexF = bookList.get(j).getBook_checkout().indexOf("/");
+							indexL = bookList.get(j).getBook_checkout().lastIndexOf("/");
+							checkOutMonth = Integer.parseInt(bookList.get(j).getBook_checkout().substring(indexF+1, indexL));
+							System.out.println("checkOutMonth->" + checkOutMonth);
+							
+							
+							for(int k = checkInDay; k < checkOutDay; k++){
+								if((toMonth+1) == checkInMonth && (toMonth+1) == checkOutMonth){
+									date_data_array[k] = 1;
+								}
+								//테스트 출력
+								//System.out.println("k->" + k);
+							}
+						}
+						Date date = new Date();
+						int nowMonth = date.getMonth();
+						System.out.println(nowMonth+1);
+						System.out.println(toMonth+1);
+						if(nowMonth+1 > toMonth+1){
+							for(int j = 0; j < date_data_array.length; j++){
+								date_data_array[j] = 1;
+							}
+							
+						}
+						/* 테스트 코드(나중에 삭제)
+						int tt = 0;
+						for(int a : date_data_array){
+							System.out.println(tt+"번째"+a);
+							tt++;
+						} */
+		
 						for(int ju = 0; ju < jcount; ju++)
 						{
-						  //out.println("<div>");
         					
 								for(i = 0; i < 7; i++)
 								{
-									
-									 if(firstday.get(Calendar.DAY_OF_WEEK) < count)
-									 {
-												_day = count - firstday.get(Calendar.DAY_OF_WEEK);
-												
-												if(_day > lastday.get(Calendar.DATE))
-												{
-													 _day = 0;
-													 day_str = "";
-										  }
-										  else
-										  {
-											   day_str = "" + _day;
-										  }
-								  }
+									String stateDay = toYear+""+(toMonth+1)+(count - firstday.get(Calendar.DAY_OF_WEEK));
+									String state = "";
+									if(firstday.get(Calendar.DAY_OF_WEEK) < count) {
+										_day = count - firstday.get(Calendar.DAY_OF_WEEK);
+										
+										if(_day > lastday.get(Calendar.DATE)){
+											_day = 0;
+											day_str = "";
+								 		}else{
+											day_str = "" + _day;
+									  		if(date_data_array[_day] == 1){
+												state = "예약불가";
+											}else{
+												state = "예약가능";
+											}
+									 
+								  		}
+								  }	
 								  
 									 count++;
 									 
@@ -421,71 +503,60 @@ date_month_next = cal.get(Calendar.MONTH);
 										
 										td_str = "";
 										
-										//DB에서 예약 정보를 확인
-										//Goods goods = bookDao.goodsInfo();
-										Book book = bookDao.bookInfo(roomName);
-										
-										
-										String state = toYear+""+(toMonth+1)+_day;
-										String test = null;
-										if(book.getBook_checkin().equals(state)){
-											result = true;
-											System.out.println("true" + book.getBook_checkin() +"-" + state);
-										}else if(book.getBook_checkout().equals(state)){
-											result = false;
-											System.out.println("false" + book.getBook_checkin() +"-" + state);
-										}
-										System.out.println("나머지" + book.getBook_checkin() +"-" + state);
-										
-										if(result){
-											test = "예약불가";
-										}else{
-											test = "예약가능";
-										}
-										
-										//상태값이 0이면 예약가능 1이면 불가능
-										//if(goods.getGoods_state().equals("0")){
-										//	state = "예약가능";
-										//}else{
-										//	state = "예약불가";
-										//}
-										
 										// 일(SUN)
 										if(i == 0)
 										{
 												td_str += "<a href='#' id='sun' class='monthly-day monthly-day-event'>";
 												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
-												td_str += "<label>" + test + "</label>";
+												td_str += "<label>" + state + "</label>";
 												//td_str += "<em class='sun'>" + day_str + "</em>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
+												holiday[holidayCount] = _day;
+												holidayCount++;
 										}
 										// 토(SAT)
 										else if(i == 6)
 										{
 												td_str += "<a href='#' class='monthly-day monthly-day-event' id='sat'>";
 												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
-												td_str += "<label>" + test + "</label>";
+												td_str += "<label>" + state + "</label>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
+												holiday[holidayCount] = _day;
+												holidayCount++;
 										}
 										// 월(MON)~금(FRI)
 										else
 										{
 												td_str += "<a href='#' class='monthly-day monthly-day-event'>";
 												td_str += "<div class='monthly-day-number'>" + day_str + "</div><br/>";
-												td_str += "<label>" + test + "</label>";
+												td_str += "<label>" + state + "</label>";
 												//if(_day!=0) { td_str += "<a href='" + link_str + "' title='" + day_str +  "일 " + schedule_pin_txt + "' " + schedule_pin_style + ">" + day_str + "</a>"; }
 												td_str += "</a>";
 										}
 										//td_str += "</div>";
 										
 										out.println(td_str);
+										
 								}
-								
-								//out.println("</div>");  
+
 					     	}
-                         
+						for(int j = 0; j<holiday.length; j++){
+							System.out.println("휴일 : " + holiday[j]);
+						}
+                        
+						//상품 가격을 정하기 위해 상품 테이블에서 정보를 가져옵니다
+						GoodsDao goodsDao = new GoodsDao();
+						Goods goods = new Goods();
+						
+						goods = goodsDao.goodsInfo(roomName);
+						
+						/* if((toMonth+1) > 6 || (toMonth+1) < 9){
+							for(int j = 0; holiday.length; j++){
+								if(holiday[j] == )
+							}
+						} */
 										%>
 										
 				
@@ -495,6 +566,11 @@ date_month_next = cal.get(Calendar.MONTH);
 <div id="chkWrap" style="float:left; display:inline-block;">
 	<form action="./dateTest.jsp" method="post">
 	<ul class="clearFix">
+		<li>
+			<div>
+				<input type="hidden" name="roomName" value="<%=roomName %>">
+			</div>
+		</li>		
 		<li>
 			<label for="chkInTarget"><h3>체크인</h3></label>
 			<div>
