@@ -13,13 +13,13 @@
 			
 		<div id="navWrap" class="clearFix">
 			<h2 id="logo">
-				<img src="./images/logo.png" />
+				<a href="./index.jsp"><img src="./images/logo.png" /></a>
 			</h2>
 
 			<nav>
 				<div id="nav">
 					<ul>
-						<li>HOME</li>
+						<li><a href="./index.jsp">HOME</a></li>
 						<li id="room">ROOM</li>
 						<li>TOUR</li>
 						<li>RESERVATION</li>

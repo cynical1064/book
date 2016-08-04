@@ -263,11 +263,7 @@
 <!-- 컨테이너 끝 -->
 
 <!-- 풋터 시작 -->
-<footer>
-	<div id="footer">
-	
-	</div>
-</footer>
+<%@ include file="./module/footer.jsp" %>
 <!-- 풋터 끝 -->
 </body>
 </html>

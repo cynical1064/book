@@ -9,6 +9,7 @@ body, html {
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 li{list-style:none;}
+a{text-decoration:none; color:#434343;}
 #navWrap{border-bottom:1px solid #ccc;}
 #logo{float:left; padding-left:50px; cursor:pointer;}
 #nav{float:right; padding-top:50px; padding-right:50px;}
@@ -16,8 +17,12 @@ li{list-style:none;}
 nav li{font-size:18px; color:#434343; font-weight:bold; float:left; margin:0 15px; cursor:pointer;}
 nav li:hover{border-bottom:3px solid #434343;}
 #adminLogin{font-size:12px; height:20px; color:#434343; float:right; padding-top:63px; padding-right:60px; cursor:pointer;}
-
+#mainRoomList{width:100%; padding:0; maring:0;}
+#mainRoomList li{float:left; width:33%;} 
 #container{width:100%; height:auto;}
+
+
+/* ¼­ºê */
 #container #leftMenuWrap{width:33.3%;}
 #container #leftMenuWrap .leftNav{width:118px; text-align:center;}
 #container #leftMenuWrap .leftNav dt{color:#434343; border-bottom:3px solid #ccc; line-height:1.5em; margin-bottom:10px;}
@@ -45,7 +50,7 @@ nav li:hover{border-bottom:3px solid #434343;}
 .hiddenRoomInfo #bookBtnWrap a{text-decoration:none; color:#fff; line-height:2.5em;}
 .onRoomInfo{display:block;}
 
-
+/* Ä¶¸°´õ css */
 h1 {
 	font-family: 'Yanone Kaffeesatz', sans-serif;
 	text-align: center;
@@ -124,8 +129,10 @@ label{clear:both; padding-left:10px;}
 		display: none;
 	}
 }
-
-
+/* Ç²ÅÍ */
+#footer{width:100%; height:auto; margin:0 auto; clear:both;}
+#footContent{width:100%; height:180px; background:#543530;}
+#footContent h3{padding-top:9px;}
 .clearFix:after{content:""; display:block; clear:both;}
 
 

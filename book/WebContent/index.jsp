@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -17,28 +16,60 @@
 <%@ include file="./module/header.jsp" %>
 
 <div id="container">
-	<div class="mainContent">
+	<div class="mainContent clearFix">
 		<div id="mainSlider">
 			<iframe src="./mainSlider/option/slider.html" width="100%" height="600px"></iframe>
 		</div>
 		<div id="mainSection">
-			<iframe src="./brickfolio/section.html" width="100%" height="900px;" ></iframe>	
+			<iframe src="./brickfolio/section.html" width="100%" height="294px; " ></iframe>	
+		</div>
+		<div>
+			<ul id="mainRoomList">
+				<li>
+					<dl>
+						<dt>Luxury Pool</dt>
+						<dd><img src="./images/roomPre_img01.jpg" /></dd>
+						<dd>
+							<p style="color:#434343; font-size:14px;">
+								5개동의 풀빌라는
+								복층형의 모던한 인테리어와 
+								개별 수영장과 스파, 바베큐를 이용하실 수 있습니다.
+							</p>
+						</dd>
+					</dl>
+				</li>
+				<li>
+					<dl>
+						<dt>Luxury Pool</dt>
+						<dd><img src="./images/roomPre_img02.jpg" /></dd>
+						<dd>
+							<p style="color:#434343; font-size:14px;">
+								5개동의 풀빌라는
+								복층형의 모던한 인테리어와 
+								개별 수영장과 스파, 바베큐를 이용하실 수 있습니다.
+							</p>
+						</dd>
+					</dl>
+				</li>
+				<li>
+					<dl>
+						<dt>Luxury Pool</dt>
+						<dd><img src="./images/roomPre_img03.jpg" /></dd>
+						<dd>
+							<p style="color:#434343; font-size:14px;">
+								5개동의 풀빌라는
+								복층형의 모던한 인테리어와 
+								개별 수영장과 스파, 바베큐를 이용하실 수 있습니다.
+							</p>
+						</dd>
+					</dl>
+				</li>
+			</ul>
 		</div>
 	</div>
 </div>
 
 <%@ include file="./module/footer.jsp" %>
-=======
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-<title>Insert title here</title>
-</head>
-<body>
->>>>>>> branch 'master' of https://github.com/cynical1064/book.git
 
 </body>
 </html>
