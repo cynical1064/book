@@ -90,7 +90,6 @@ $(document).ready(function(){
 	$('.btn').click(function(){
 		
 		var chkInVal = $('#chkInTarget').val();
-<<<<<<< HEAD
 		var chkInArray = chkInVal.split('/');
 		var cout1 = Number(chkInArray[2]);
 		var chkOutVal = $('#chkOutTarget').val()
@@ -98,7 +97,7 @@ $(document).ready(function(){
 		var chkOutArray = chkOutVal.split('/');
 		var cout2 = Number(chkOutArray[2]);
 		//alert(chkInArray[2] > chkOutArray[2]);		
-=======
+
 		var chkInArray = chkInVal.split('/');//문자열로 자르기 때문에 parsing작업이 필요함
 		var parseChkInArray = parseInt(chkInArray[2]);//parsing작업
 		
@@ -107,7 +106,6 @@ $(document).ready(function(){
 		var parseChkOutArray = parseInt(chkOutArray[2]);
 		
 		//alert(parseChkInArray>parseChkOutArray);
->>>>>>> branch 'master' of https://github.com/cynical1064/book.git
 		
 		if($('#chkInTarget').val() == ''){
 			
@@ -375,7 +373,7 @@ date_month_next = cal.get(Calendar.MONTH);
 			
 			<div  class="calender_date">
 				<h2>
-					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"></a>
+					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"><</a>
 					<span><strong id="year"><%=toYear%></strong>년 <strong  id="month"><%=toMonth + 1%></strong>월</span>
 					<a href="<%=req_str%>&amp;y=<%=date_year_next%>&amp;m=<%=date_month_next + 1%>">></a>
 				</h2>
@@ -418,40 +416,66 @@ date_month_next = cal.get(Calendar.MONTH);
 						boolean result = false;
 						ArrayList<Book> bookList = new ArrayList<Book>();
 						bookList = bookDao.bookInfo(roomName);
+						
 						//예약이 이미 되어있는곳을 달력에 표시해주기 위해
 						//배열에 예약이 되어있는 날짜 표시
 						for(int j = 0; j < bookList.size(); j++){
 							int checkInDay = 0;
 							int checkOutDay = 0;
 							int checkInMonth = 0;
+							int checkOutMonth = 0;
 							int checkInYear = 0;
-							int index = 0;
+							int indexF = 0;
+							int indexL = 0;
 							
-							index = bookList.get(i).getBook_checkin().lastIndexOf("/");
-							System.out.println("index1->" + index);
-							checkInDay = Integer.parseInt(bookList.get(i).getBook_checkin().substring(index+1));
-							/* index = bookList.get(i).getBook_checkin().indexOf("/");
-							checkInMonth = Integer.parseInt(bookList.get(i).getBook_checkin().substring(index+1)); */
+							indexL = bookList.get(j).getBook_checkin().lastIndexOf("/");
+							System.out.println("indexL->" + indexL);
+							checkInDay = Integer.parseInt(bookList.get(j).getBook_checkin().substring(indexL+1));
 							
-							index = bookList.get(i).getBook_checkout().lastIndexOf("/");
-							System.out.println("index2->" + index);
-							checkOutDay = Integer.parseInt(bookList.get(i).getBook_checkout().substring(index+1));
+							indexL = bookList.get(j).getBook_checkout().lastIndexOf("/");
+							System.out.println("indexL->" + indexL);
+							checkOutDay = Integer.parseInt(bookList.get(j).getBook_checkout().substring(indexL+1));
+							
+							indexF = bookList.get(j).getBook_checkin().indexOf("/");
+							System.out.println("indexF->" + indexF);
+							indexL = bookList.get(j).getBook_checkin().lastIndexOf("/");
+							System.out.println("indexL->" + indexL);
+							checkInMonth = Integer.parseInt(bookList.get(j).getBook_checkin().substring(indexF+1, indexL));
+							System.out.println("checkInMonth ->" + checkInMonth);
+							
+							indexF = bookList.get(j).getBook_checkout().indexOf("/");
+							indexL = bookList.get(j).getBook_checkout().lastIndexOf("/");
+							checkOutMonth = Integer.parseInt(bookList.get(j).getBook_checkout().substring(indexF+1, indexL));
+							System.out.println("checkOutMonth->" + checkOutMonth);
+							
 							
 							for(int k = checkInDay; k < checkOutDay; k++){
-								date_data_array[k] = 1;
-								System.out.println("k->" + k);
+								if((toMonth+1) == checkInMonth && (toMonth+1) == checkOutMonth){
+									date_data_array[k] = 1;
+								}
+								//테스트 출력
+								//System.out.println("k->" + k);
 							}
 						}
+						Date date = new Date();
+						int nowMonth = date.getMonth();
+						System.out.println(nowMonth+1);
+						System.out.println(toMonth+1);
+						if(nowMonth+1 > toMonth+1){
+							for(int j = 0; j < date_data_array.length; j++){
+								date_data_array[j] = 1;
+							}
+							
+						}
+						/* 테스트 코드(나중에 삭제)
 						int tt = 0;
 						for(int a : date_data_array){
 							System.out.println(tt+"번째"+a);
 							tt++;
-						}
-						//Iterator<Book> iterator = bookList.iterator();
+						} */
+		
 						for(int ju = 0; ju < jcount; ju++)
 						{
-						  
-						  //out.println("<div>");
         					
 								for(i = 0; i < 7; i++)
 								{
@@ -470,8 +494,7 @@ date_month_next = cal.get(Calendar.MONTH);
 											}else{
 												state = "예약가능";
 											}
-									   		System.out.println("daycount=>" + _day);
-									   		//dayCount++;
+									 
 								  		}
 								  }	
 								  
@@ -488,20 +511,6 @@ date_month_next = cal.get(Calendar.MONTH);
 										
 										td_str = "";
 										
-										//DB에서 예약 정보를 확인
-										//Goods goods = bookDao.goodsInfo();
-										
-										
-										//상태값이 0이면 예약가능 1이면 불가능
-										//if(goods.getGoods_state().equals("0")){
-										//	state = "예약가능";
-										//}else{
-										//	state = "예약불가";
-										//}
-										
-									
-										
-										//day_str += "<br/>" + state;
 										// 일(SUN)
 										if(i == 0)
 										{
@@ -535,7 +544,7 @@ date_month_next = cal.get(Calendar.MONTH);
 										out.println(td_str);
 										
 								}
-								//out.println("</div>");  
+
 					     	}
                          	
 										%>
@@ -547,6 +556,11 @@ date_month_next = cal.get(Calendar.MONTH);
 <div id="chkWrap" style="float:left; display:inline-block;">
 	<form action="./dateTest.jsp" method="post">
 	<ul class="clearFix">
+		<li>
+			<div>
+				<input type="hidden" name="roomName" value="<%=roomName %>">
+			</div>
+		</li>		
 		<li>
 			<label for="chkInTarget"><h3>체크인</h3></label>
 			<div>
