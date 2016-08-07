@@ -12,6 +12,17 @@
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 <script type="text/javascript" src="js/monthly.js"></script>
 <script src="./dev/pickout.js"></script>
+
+
+<%
+	request.setCharacterEncoding("UTF-8");
+	//방가격 정보를 얻어 위해 방 이름을 넘겨 데이터베이스에서 방가격을 가져옵니다.
+	String roomName = request.getParameter("roomName");
+	GoodsDao goodsDao = new GoodsDao();
+	Goods goods = new Goods();
+		
+	goods = goodsDao.goodsInfo(roomName);
+%>
 <script>
 $(document).ready(function(){
 
@@ -43,6 +54,29 @@ $(document).ready(function(){
 		var thisDay = $(this).find('.monthly-day-number').text();
 		var bookState = $(this).find('label').text();
 		
+		var holiday = $(this).attr('id');
+		
+		//성수기 일때
+		if(calMonth > 6 && calMonth < 9){
+			//성수기 주말가격 셋팅
+			if(holiday == 'sun' || holiday =='sat'){
+				$('#price').val(<%=goods.getGoods_ys2()%>);
+			//성수기 평일 가격 셋팅
+			}else{
+				$('#price').val(<%=goods.getGoods_ys1()%>);
+			}
+		//비수기 일떄
+		}else{
+			//비수기 주말가격
+			if(holiday == 'sun' || holiday =='sat'){
+				$('#price').val(<%=goods.getGoods_ns2()%>);
+			//비수기 평일가격
+			}else{
+				$('#price').val(<%=goods.getGoods_ns1()%>);
+			}
+		}
+	
+		
 		if(bookState == '예약불가'){
 			
 			alert('예약 가능한 날짜를 선택해주세요');
@@ -54,10 +88,6 @@ $(document).ready(function(){
 		}
 		
 	});
-<<<<<<< HEAD
-=======
-	
->>>>>>> branch 'master' of https://github.com/cynical1064/book.git
 	$('#chkIn').monthly({
 		mode: 'picker',
 		target: '#chkInTarget',
@@ -218,10 +248,10 @@ body{color:#434343;}
 			font-family:inherit;
 		}		
 
-	</style>
+</style>
 	<link rel="stylesheet" href="./dev/pickout.css">
 <%
-request.setCharacterEncoding("UTF-8");
+
 String[] time_array = {"10:00", "13:30", "15:30"};
 
 
@@ -374,9 +404,9 @@ date_month_next = cal.get(Calendar.MONTH);
 			
 			<div  class="calender_date">
 				<h2>
-					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>"><</a>
+					<a href="<%=req_str%>&amp;y=<%=date_year_prve%>&amp;m=<%=date_month_prve + 1%>&roomName=<%=roomName%>"><</a>
 					<span><strong id="year"><%=toYear%></strong>년 <strong  id="month"><%=toMonth + 1%></strong>월</span>
-					<a href="<%=req_str%>&amp;y=<%=date_year_next%>&amp;m=<%=date_month_next + 1%>">></a>
+					<a href="<%=req_str%>&amp;y=<%=date_year_next%>&amp;m=<%=date_month_next + 1%>&roomName=<%=roomName%>">></a>
 				</h2>
 			</div>
 
@@ -414,7 +444,6 @@ date_month_next = cal.get(Calendar.MONTH);
 						String link_str = "";
 						
 						//DB에서 예약 가능한지 상태 값을 가져오기위해 메서드 호출 객체 생성
-						String roomName = request.getParameter("roomName");
 						BookDao bookDao = new BookDao();	
 						boolean result = false;
 						ArrayList<Book> bookList = new ArrayList<Book>();
@@ -554,22 +583,7 @@ date_month_next = cal.get(Calendar.MONTH);
 
 					     	}
 
-						for(int j = 0; j<holiday.length; j++){
-							System.out.println("휴일 : " + holiday[j]);
-						}
-                        
-						//상품 가격을 정하기 위해 상품 테이블에서 정보를 가져옵니다
-						GoodsDao goodsDao = new GoodsDao();
-						Goods goods = new Goods();
-						
-						goods = goodsDao.goodsInfo(roomName);
-						
-						/* if((toMonth+1) > 6 || (toMonth+1) < 9){
-							for(int j = 0; holiday.length; j++){
-								if(holiday[j] == )
-							}
-						} */
-										%>
+			%>
 										
 				
 </div>
@@ -617,6 +631,12 @@ date_month_next = cal.get(Calendar.MONTH);
 					<option value="jockgu">족구장+네트</option>
 					<option value="referenceRoom">연회장</option>
 				</select>			
+			</div>
+		</li>
+		<li>
+			<div class="form-group">
+				<label for="price"><h3>가격</h3></label>
+				<input  type="text" name="price" id="price" placeholder="가격">
 			</div>
 		</li>
 		<li>	
